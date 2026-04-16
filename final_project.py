@@ -9,7 +9,6 @@ from sklearn.svm import SVC
 # ==========================================
 # 1. DATA LOADING & PREPARATION
 # ==========================================
-print(">>> Loading dataset...")
 df = pd.read_csv('exchange_rate.csv', sep=';')
 
 # Input Features: Last 7 Days
@@ -27,8 +26,8 @@ X_train_scaled = (X_train - train_mean) / train_std
 X_test_scaled = (X_test - train_mean) / train_std
 
 # Add Bias column (x0 = 1) specifically for Custom Logistic Regression
-X_train_lr = np.c_[np.ones((X_train_scaled.shape[0], 1)), X_train_scaled]
-X_test_lr = np.c_[np.ones((X_test_scaled.shape[0], 1)), X_test_scaled]
+X_train = np.c_[np.ones((X_train_scaled.shape[0], 1)), X_train_scaled]
+X_test = np.c_[np.ones((X_test_scaled.shape[0], 1)), X_test_scaled]
 
 Y_train = y_train.values
 Y_test = y_test.values
@@ -40,7 +39,7 @@ def initialize(dim):
     return np.random.rand(dim) * 0.01 
 
 def sigmoid(x):
-    x = np.clip(x, -250, 250)
+    # x = np.clip(x, -250, 250)
     return 1 / (1 + np.exp(-x))
 
 def predict_Y(theta, X):
@@ -48,8 +47,8 @@ def predict_Y(theta, X):
 
 def cost_function(y, y_hat):
     m = len(y)
-    epsilon = 1e-15  
-    y_hat = np.clip(y_hat, epsilon, 1 - epsilon)
+    # epsilon = 1e-15  
+    # y_hat = np.clip(y_hat, epsilon, 1 - epsilon)
     total_cost = -(1 / m) * np.sum(y * np.log(y_hat) + (1 - y) * np.log(1 - y_hat))
     return total_cost
 
@@ -58,7 +57,7 @@ def update_theta(x, y, y_hat, theta_o, learning_rate):
     return theta_o - learning_rate * dw
 
 def run_gradient_descent(X, Y, alpha, num_iterations):
-    print(">>> Starting Custom Gradient Descent training...")
+
     theta = initialize(X.shape[1])
     cost_history = [] 
     
@@ -77,7 +76,7 @@ def run_gradient_descent(X, Y, alpha, num_iterations):
 # ==========================================
 # 3. TRAINING THE CUSTOM MODEL
 # ==========================================
-gd_iterations_df, trained_theta = run_gradient_descent(X_train_lr, Y_train, alpha=0.05, num_iterations=4000)
+gd_iterations_df, trained_theta = run_gradient_descent(X_train, Y_train, alpha=0.03, num_iterations=5000)
 
 # ==========================================
 # 4. PREDICTION AND EVALUATION (CUSTOM LR)
@@ -86,7 +85,7 @@ print("\n" + "="*50)
 print(" CUSTOM LOGISTIC REGRESSION EVALUATION")
 print("="*50)
 
-Y_test_prob = predict_Y(trained_theta, X_test_lr)
+Y_test_prob = predict_Y(trained_theta, X_test)
 THRESHOLD = 0.15
 Y_test_pred_custom = (Y_test_prob >= THRESHOLD).astype(int)
 
