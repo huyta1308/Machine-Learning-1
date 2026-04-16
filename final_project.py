@@ -126,18 +126,6 @@ print(f"[2] Support Vector Machine     : {acc_svm * 100:.2f}%")
 print(f"[3] Random Forest Classifier   : {acc_rf * 100:.2f}%")
 print("="*50)
 
-# ====================================================
-# REAL-WORLD FORECASTING (LAST 7 DAYS)
-# ====================================================
-# print("\n--- PREDICTION FOR RECENT 7 DAYS ---")
-# Day = 1
-# for i in range(len(X_test_lr) - 7, len(X_test_lr)):
-#     prob = Y_test_prob[i] * 100
-#     pred = "UP" if Y_test_prob[i] >= THRESHOLD else "DOWN/FLAT"
-#     actual = "UP" if Y_test[i] == 1 else "DOWN/FLAT"
-#     print(f"Day {Day} | UP Probability: {prob:5.1f}% -> Predicted: {pred:<9} (Actual: {actual})")
-#     Day += 1
-
 # =======================
 # PLOT LEARNING CURVE
 # =======================
@@ -149,3 +137,15 @@ plt.title("Gradient Descent: Learning Curve")
 plt.grid(True, linestyle='--', alpha=0.7)
 plt.tight_layout()
 plt.show()
+
+# ====================================================
+# REAL-WORLD FORECASTING (LAST 7 DAYS)
+# ====================================================
+# print("\n--- PREDICTION FOR RECENT 7 DAYS ---")
+# Day = 1
+# for i in range(len(X_test_lr) - 7, len(X_test_lr)):
+#     prob = Y_test_prob[i] * 100
+#     pred = "UP" if Y_test_prob[i] >= THRESHOLD else "DOWN/FLAT"
+#     actual = "UP" if Y_test[i] == 1 else "DOWN/FLAT"
+#     print(f"Day {Day} | UP Probability: {prob:5.1f}% -> Predicted: {pred:<9} (Actual: {actual})")
+#     Day += 1
