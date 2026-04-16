@@ -7,7 +7,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
 
 # ==========================================
-# 1. DATA LOADING & PREPARATION
+# DATA LOADING & PREPARATION
 # ==========================================
 df = pd.read_csv('exchange_rate.csv', sep=';')
 
@@ -33,7 +33,7 @@ Y_train = y_train.values
 Y_test = y_test.values
 
 # ==========================================
-# 2. CUSTOM LOGISTIC REGRESSION FUNCTIONS
+# CUSTOM LOGISTIC REGRESSION FUNCTIONS
 # ==========================================
 def initialize(dim):
     return np.random.rand(dim) * 0.01 
@@ -69,17 +69,16 @@ def run_gradient_descent(X, Y, alpha, num_iterations):
         if(each_iter % 100 == 0):
             cost_history.append([each_iter, this_cost])
             
-    print(">>> Training Complete!")
     return pd.DataFrame(cost_history, columns=['iteration', 'cost']), theta
 
 
 # ==========================================
-# 3. TRAINING THE CUSTOM MODEL
+# TRAINING THE CUSTOM MODEL
 # ==========================================
 gd_iterations_df, trained_theta = run_gradient_descent(X_train, Y_train, alpha=0.03, num_iterations=5000)
 
 # ==========================================
-# 4. PREDICTION AND EVALUATION (CUSTOM LR)
+# PREDICTION AND EVALUATION (CUSTOM LR)
 # ==========================================
 print("\n" + "="*50)
 print(" CUSTOM LOGISTIC REGRESSION EVALUATION")
@@ -128,7 +127,7 @@ print(f"[3] Random Forest Classifier   : {acc_rf * 100:.2f}%")
 print("="*50)
 
 # ====================================================
-# 6. REAL-WORLD FORECASTING (LAST 7 DAYS)
+# REAL-WORLD FORECASTING (LAST 7 DAYS)
 # ====================================================
 # print("\n--- PREDICTION FOR RECENT 7 DAYS ---")
 # Day = 1
@@ -140,7 +139,7 @@ print("="*50)
 #     Day += 1
 
 # =======================
-# 7. PLOT LEARNING CURVE
+# PLOT LEARNING CURVE
 # =======================
 plt.figure(figsize=(8, 4))
 plt.plot(gd_iterations_df['iteration'], gd_iterations_df['cost'], color='#1f77b4', linewidth=2)
