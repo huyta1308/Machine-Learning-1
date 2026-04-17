@@ -85,7 +85,7 @@ print(" CUSTOM LOGISTIC REGRESSION EVALUATION")
 print("="*50)
 
 Y_test_prob = predict_Y(trained_theta, X_test)
-THRESHOLD = 0.15
+THRESHOLD = 0.17
 Y_test_pred_custom = (Y_test_prob >= THRESHOLD).astype(int)
 
 accuracy_custom = accuracy_score(Y_test, Y_test_pred_custom)
@@ -99,7 +99,7 @@ print(confusion_matrix(Y_test, Y_test_pred_custom))
 
 print("\n--- CLASSIFICATION REPORT ---")
 print(classification_report(Y_test, Y_test_pred_custom, zero_division=0))
-print("-" * 50)
+
 
 
 # ====================================================
@@ -124,7 +124,7 @@ acc_svm = accuracy_score(Y_test, svm_pred)
 print(f"[1] Custom Logistic Regression : {accuracy_custom * 100:.2f}%")
 print(f"[2] Support Vector Machine     : {acc_svm * 100:.2f}%")
 print(f"[3] Random Forest Classifier   : {acc_rf * 100:.2f}%")
-print("="*50)
+
 
 # =======================
 # PLOT LEARNING CURVE
