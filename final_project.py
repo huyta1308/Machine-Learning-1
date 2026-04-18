@@ -6,9 +6,8 @@ from sklearn.metrics import accuracy_score, classification_report, confusion_mat
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
 
-# ==========================================
+
 # DATA LOADING & PREPARATION
-# ==========================================
 df = pd.read_csv('exchange_rate.csv', sep=';')
 
 # Input Features: Last 7 Days
@@ -25,21 +24,18 @@ train_std = X_train.std()
 X_train_scaled = (X_train - train_mean) / train_std
 X_test_scaled = (X_test - train_mean) / train_std
 
-# Add Bias column (x0 = 1) specifically for Custom Logistic Regression
+# Add Bias column (x0 = 1) 
 X_train = np.c_[np.ones((X_train_scaled.shape[0], 1)), X_train_scaled]
 X_test = np.c_[np.ones((X_test_scaled.shape[0], 1)), X_test_scaled]
 
 Y_train = y_train.values
 Y_test = y_test.values
 
-# ==========================================
-# CUSTOM LOGISTIC REGRESSION FUNCTIONS
-# ==========================================
+# LOGISTIC REGRESSION FUNCTIONS
 def initialize(dim):
     return np.random.rand(dim) * 0.01 
 
 def sigmoid(x):
-    # x = np.clip(x, -250, 250)
     return 1 / (1 + np.exp(-x))
 
 def predict_Y(theta, X):
@@ -47,8 +43,6 @@ def predict_Y(theta, X):
 
 def cost_function(y, y_hat):
     m = len(y)
-    # epsilon = 1e-15  
-    # y_hat = np.clip(y_hat, epsilon, 1 - epsilon)
     total_cost = -(1 / m) * np.sum(y * np.log(y_hat) + (1 - y) * np.log(1 - y_hat))
     return total_cost
 
@@ -72,42 +66,32 @@ def run_gradient_descent(X, Y, alpha, num_iterations):
     return pd.DataFrame(cost_history, columns=['iteration', 'cost']), theta
 
 
-# ==========================================
 # TRAINING THE CUSTOM MODEL
-# ==========================================
 gd_iterations_df, trained_theta = run_gradient_descent(X_train, Y_train, alpha=0.03, num_iterations=5000)
 
-# ==========================================
-# PREDICTION AND EVALUATION (CUSTOM LR)
-# ==========================================
-print("\n" + "="*50)
-print(" CUSTOM LOGISTIC REGRESSION EVALUATION")
-print("="*50)
+
+# PREDICTION AND EVALUATION 
+print("LOGISTIC REGRESSION EVALUATION")
 
 Y_test_prob = predict_Y(trained_theta, X_test)
 THRESHOLD = 0.17
-Y_test_pred_custom = (Y_test_prob >= THRESHOLD).astype(int)
+Y_test_pred = (Y_test_prob >= THRESHOLD).astype(int)
 
-accuracy_custom = accuracy_score(Y_test, Y_test_pred_custom)
+accuracy_custom = accuracy_score(Y_test, Y_test_pred)
 print(f"Accuracy Score (with Threshold={THRESHOLD}): {accuracy_custom * 100:.2f}%\n")
 
-# ----------------------------------------------------
+
 # CONFUSION MATRIX & REPORT
-# ----------------------------------------------------
+
 print("--- CONFUSION MATRIX ---")
-print(confusion_matrix(Y_test, Y_test_pred_custom))
+print(confusion_matrix(Y_test, Y_test_pred))
 
 print("\n--- CLASSIFICATION REPORT ---")
-print(classification_report(Y_test, Y_test_pred_custom, zero_division=0))
+print(classification_report(Y_test, Y_test_pred, zero_division=0))
 
 
-
-# ====================================================
-# 5. MODEL PERFORMANCE COMPARISON
-# ====================================================
-print("\n" + "="*50)
-print(" MACHINE LEARNING MODELS COMPARISON")
-print("="*50)
+# MODEL PERFORMANCE COMPARISON
+print("----- MACHINE LEARNING MODELS COMPARISON-----")
 
 # Random Forest Classifier 
 rf_model = RandomForestClassifier(n_estimators=100, random_state=42)
@@ -121,21 +105,18 @@ svm_model.fit(X_train_scaled, Y_train)
 svm_pred = svm_model.predict(X_test_scaled)
 acc_svm = accuracy_score(Y_test, svm_pred)
 
-print(f"[1] Custom Logistic Regression : {accuracy_custom * 100:.2f}%")
+print(f"[1] Logistic Regression : {accuracy_custom * 100:.2f}%")
 print(f"[2] Support Vector Machine     : {acc_svm * 100:.2f}%")
 print(f"[3] Random Forest Classifier   : {acc_rf * 100:.2f}%")
 
 
-# =======================
+
 # PLOT LEARNING CURVE
-# =======================
 plt.figure(figsize=(8, 4))
 plt.plot(gd_iterations_df['iteration'], gd_iterations_df['cost'], color='#1f77b4', linewidth=2)
 plt.xlabel("Number of Iterations")
 plt.ylabel("Cost (Log Loss)")
 plt.title("Gradient Descent: Learning Curve")
-plt.grid(True, linestyle='--', alpha=0.7)
-plt.tight_layout()
 plt.show()
 
 # ====================================================
